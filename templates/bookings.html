@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="text-3xl font-bold mb-6">Мои бронирования</h1>
+
+    {% if not bookings %}
+        <p>У вас пока нет бронирований.</p>
+    {% else %}
+        <ul>
+            {% for booking in bookings %}
+                <li class="my-5">
+                    <h2>{{ booking.flight.departure_city }} - {{ booking.flight.arrival_city }}</h2>
+                    <p>Дата отправления: {{ booking.flight.departure_datetime.strftime('%d.%m.%Y %H:%M') }}</p>
+                    <p>ФИО: {{ booking.full_name }}</p>
+                    <p>Email: {{ booking.email }}</p>
+                    <p>Телефон: {{ booking.phone }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

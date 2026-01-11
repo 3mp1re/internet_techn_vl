@@ -1,0 +1,59 @@
+<!-- templates/flight_details.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="max-w-2xl mx-auto p-6">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            {% if flight.image %}
+                <img src="{{ url_for('static', filename=flight.image.replace('static/', '')) }}" alt="Изображение рейса" class="w-full h-64 object-cover mb-6 rounded-lg">
+            {% else %}
+                <div class="w-full h-64 bg-gray-200 rounded-lg mb-6"></div> </div> <p class="text-center text-gray-500">Изображение отсутствует</p>
+            {% endif %}
+
+
+            <h1 class="text-3xl font-bold my-4">{{ flight.departure_city }} - {{ flight.arrival_city }}</h1>
+
+            <div class="mb-6">
+                <p class="mb-2 font-semibold">{{ flight.description }}</span> </p>
+                <p class="mb-2"><span class="font-semibold">Маршрут:</span> {{ flight.route }}</p>
+                <div class="flex justify-between">
+                    <div>
+                        <p class="mb-2"><span class="font-semibold">Отправление:</span> <br> {{ flight.departure_datetime.strftime('%d.%m.%Y %H:%M') }}</p>
+                    </div>
+                    <div>
+                        <p class="mb-2"><span class="font-semibold">Прибытие:</span><br> {{ flight.arrival_datetime.strftime('%d.%m.%Y %H:%M') }}</p>
+                    </div>
+                </div>
+                <p class="mb-2"><span class="font-semibold">Продолжительность:</span> {{ duration_hours }} ч {{ duration_minutes }} мин</p>
+                    <p class="mb-2 text-lg font-bold"><span class="font-semibold">Цена:</span> {{ flight.price }} руб.</p>
+
+
+            </div>
+
+           
+            {% if current_user.is_authenticated %}
+                <form action="{{ url_for('book_flight', flight_id=flight.id) }}" method="post" class="mt-6">
+                    <div class="mb-4">
+                        <label for="full_name" class="block text-gray-700 font-bold mb-2">ФИО:</label>
+                        <input type="text" name="full_name" id="full_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required value="{{ current_user.username }}"> </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 font-bold mb-2">Email:</label>
+                        <input type="email" name="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="phone" class="block text-gray-700 font-bold mb-2">Телефон:</label>
+                        <input type="tel" name="phone" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    </div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Забронировать
+                    </button>
+                </form>
+            {% else %}
+                    <p>Пожалуйста, <a href="{{ url_for('login') }}" class="text-blue-500 hover:underline">войдите</a> или <a href="{{ url_for('register') }}" class="text-blue-500 hover:underline">зарегистрируйтесь</a>, чтобы забронировать этот рейс.</p>
+            {% endif %}
+
+        </div>
+    </div>
+
+{% endblock %}

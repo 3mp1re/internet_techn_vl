@@ -1,0 +1,54 @@
+<!-- templates/index.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="relative overflow-hidden">
+        <img src="static/img.jpeg" alt="Hero Image" class="w-full h-96 object-cover sm:h-auto sm:w-full md:h-[500px]">
+        <div class="absolute inset-0 bg-black opacity-80"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center text-white px-4">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">Найдите свой идеальный рейс</h1>
+                <p class="text-lg sm:text-xl md:text-2xl mb-6">Ваше путешествие начинается здесь!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="text-3xl font-bold mb-6">Список рейсов</h1>
+
+    {% if not flights %}
+        <p class="text-gray-600">Рейсов пока нет.</p>
+    {% else %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for flight in flights %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden transform duration-300 hover:scale-105">
+                {% if flight.image %}
+                        <img src="{{ url_for('static', filename=flight.image.replace('static/', '')) }}" alt="{{ flight.departure_city }} - {{ flight.arrival_city }}" class="w-full h-48 object-cover">
+                    {% else %}
+                        <div class="w-full h-48 bg-gray-300"></div> 
+                    {% endif %}
+                    <div class="p-6">
+                        <h2 class="text-2xl font-semibold mb-2">{{ flight.departure_city }} - {{ flight.arrival_city }}</h2>
+                        <p class="text-gray-600 mb-4">{{ flight.description }}</p>
+                        <div class="flex justify-between mb-2">
+                            <p>
+                                <span class="font-semibold">Отправление:</span> {{ flight.departure_datetime.strftime('%d.%m.%Y %H:%M') }}
+                            </p>
+                         </div>
+                           <div class="flex justify-between mb-4">
+                            <p>
+                                <span class="font-semibold">Прибытие:</span> {{ flight.arrival_datetime.strftime('%d.%m.%Y %H:%M') }}
+                            </p>
+                         </div>
+
+
+                        <p class="text-lg font-bold mb-4">{{ flight.price }} руб.</p>
+                        <a href="{{ url_for('flight_details', flight_id=flight.id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block">Подробнее</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+{% endblock %}
